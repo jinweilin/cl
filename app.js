@@ -29,13 +29,13 @@ app.get('/cl', function (req, res) {
 	if (Object.keys(req.query).length !== 0 ) {
 		var record = {};
 		if (req.query.prod_no)
-			record.prod_no = req.query.prod_no;
+			record.prod_no = req.query.prod_no.toUpperCase();
 		if (req.query.m_id)
-			record.m_id = req.query.m_id;
+			record.m_id = req.query.m_id.toUpperCase();
 		if (req.query.ord_no)
-			record.ord_no = req.query.ord_no;
+			record.ord_no = req.query.ord_no.toUpperCase();
 		if (req.query.gid)
-			record.gid = req.query.gid;
+			record.gid = req.query.gid.toUpperCase();
 		if (req.query.desc)
 			record.desc = req.query.desc;
 		if (req.query.title)
@@ -47,7 +47,11 @@ app.get('/cl', function (req, res) {
 		if (req.query.data)
 			record.data = req.query.data;	
 		if (req.query.channel)
-			record.channel = req.query.channel;	
+			record.channel = req.query.channel.toUpperCase();	
+		if (req.query.act)
+			record.act = req.query.act.toUpperCase();	
+		else 
+			record.act = 'VIEW';	
 		if (Object.keys(record).length !== 0 && (req.query.gid||req.query.m_id)) {
 			record.date = (new Date()).getTime();
 			console.log(JSON.stringify(record));
