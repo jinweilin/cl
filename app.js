@@ -25,35 +25,50 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.post('/cl', function (req, res) {
-	var record = {
-		date: (new Date()).getTime(),
-		prod_no: req.body.prod_no,
-		member_uuid: req.body.m_id,
-		ord_no: req.body.ord_no,
-		gid: req.body.gid,
-		desc: req.body.desc,
-		title: req.body.title,
-		beg_dt: req.body.beg_dt,
-		url: req.body.url,
-		data: req.body.data,
-		channel: req.body.channel
-	}
-	console.log(JSON.stringify(record));
-	var params = {
-		DeliveryStreamName: config.aws_kinesis_end_point,
-		Record: {
-			Data: JSON.stringify(record) + "\n"
+app.get('/cl', function (req, res) {
+	if (Object.keys(req.query).length !== 0 ) {
+		var record = {};
+		if (req.query.prod_no)
+			record.prod_no = req.query.prod_no;
+		if (req.query.m_id)
+			record.m_id = req.query.m_id;
+		if (req.query.ord_no)
+			record.ord_no = req.query.ord_no;
+		if (req.query.gid)
+			record.gid = req.query.gid;
+		if (req.query.desc)
+			record.desc = req.query.desc;
+		if (req.query.title)
+			record.title = req.query.title;	
+		if (req.query.beg_dt)
+			record.beg_dt = req.query.beg_dt;	
+		if (req.query.url)
+			record.url = req.query.url;	
+		if (req.query.data)
+			record.data = req.query.data;	
+		if (req.query.channel)
+			record.channel = req.query.channel;	
+		if (Object.keys(record).length !== 0 && (req.query.gid||req.query.m_id)) {
+			record.date = (new Date()).getTime();
+			console.log(JSON.stringify(record));
+			var params = {
+				DeliveryStreamName: config.aws_kinesis_end_point,
+				Record: {
+					Data: JSON.stringify(record) + "\n"
+				}
+			};
+			firehose.putRecord(params, function (err, data) {
+				if (err) console.log(err, err.stack); // an error occurred
+				else console.log(data); // successful response
+			});
 		}
-	};
-
-	firehose.putRecord(params, function (err, data) {
-		if (err) console.log(err, err.stack); // an error occurred
-		else console.log(data); // successful response
-	});
-	res.status(200).json({
-		code: "000"
-	});
+	}
+	var buf = new Buffer(35);
+	res.writeHead(200, {
+     'Content-Type': 'image/png',
+     'Content-Length': buf.length
+   });
+   res.end(buf); 
 });
 
 let server = app.listen(function () {
