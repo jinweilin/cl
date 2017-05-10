@@ -26,7 +26,7 @@ app.use(function (req, res, next) {
 });
 
 app.get('/cl', function (req, res) {
-	if (Object.keys(req.query).length !== 0 ) {
+	if (Object.keys(req.query).length !== 0) {
 		var record = {};
 		if (req.query.prod_no)
 			record.prod_no = req.query.prod_no.toUpperCase();
@@ -39,21 +39,21 @@ app.get('/cl', function (req, res) {
 		if (req.query.desc)
 			record.desc = req.query.desc;
 		if (req.query.title)
-			record.title = req.query.title;	
+			record.title = req.query.title;
 		if (req.query.beg_dt)
-			record.beg_dt = req.query.beg_dt;	
+			record.beg_dt = req.query.beg_dt;
 		if (req.query.url)
-			record.url = req.query.url;	
+			record.url = req.query.url;
 		if (req.query.data)
-			record.data = req.query.data;	
+			record.data = req.query.data;
 		if (req.query.channel)
-			record.channel = req.query.channel.toUpperCase();	
-		if (req.query.act)
-			record.act = req.query.act.toUpperCase();	
-		else 
-			record.act = 'VIEW';	
-		if (Object.keys(record).length !== 0 && (req.query.gid||req.query.m_id)) {
+			record.channel = req.query.channel.toUpperCase();
+		if (Object.keys(record).length !== 0 && (typeof record.gid !== 'undefined' || typeof record.m_id !== 'undefined')) {
 			record.date = (new Date()).getTime();
+			if (req.query.act)
+				record.act = req.query.act.toUpperCase();
+			else
+				record.act = 'VIEW';
 			console.log(JSON.stringify(record));
 			var params = {
 				DeliveryStreamName: config.aws_kinesis_end_point,
@@ -62,17 +62,32 @@ app.get('/cl', function (req, res) {
 				}
 			};
 			firehose.putRecord(params, function (err, data) {
+				console.log('save done.');
 				if (err) console.log(err, err.stack); // an error occurred
 				else console.log(data); // successful response
+				var buf = new Buffer(35);
+				res.writeHead(200, {
+					'Content-Type': 'image/png',
+					'Content-Length': buf.length
+				});
+				res.end(buf);
 			});
+		} else {
+			var buf = new Buffer(35);
+			res.writeHead(200, {
+				'Content-Type': 'image/png',
+				'Content-Length': buf.length
+			});
+			res.end(buf);
 		}
+	} else {
+		var buf = new Buffer(35);
+		res.writeHead(200, {
+			'Content-Type': 'image/png',
+			'Content-Length': buf.length
+		});
+		res.end(buf);
 	}
-	var buf = new Buffer(35);
-	res.writeHead(200, {
-     'Content-Type': 'image/png',
-     'Content-Length': buf.length
-   });
-   res.end(buf); 
 });
 
 let server = app.listen(function () {
