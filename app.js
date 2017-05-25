@@ -1,6 +1,7 @@
 'use strict'
 const express = require('express');
 const bodyParser = require('body-parser');
+const geoip2 = require('geoip2');
 var AWS = require("aws-sdk");
 AWS.config.update({
 	region: 'us-east-1'
@@ -26,6 +27,7 @@ app.use(function (req, res, next) {
 });
 
 app.get('/cl', function (req, res) {
+	geoip2.init();
 	if (Object.keys(req.query).length !== 0) {
 		var record = {};
 		if (req.query.prod_no)
@@ -48,37 +50,60 @@ app.get('/cl', function (req, res) {
 			record.data = req.query.data;
 		if (req.query.channel)
 			record.channel = req.query.channel.toUpperCase();
-		if (Object.keys(record).length !== 0 && (typeof record.gid !== 'undefined' || typeof record.m_id !== 'undefined')) {
-			record.date = (new Date()).getTime();
-			if (req.query.act)
-				record.act = req.query.act.toUpperCase();
-			else
-				record.act = 'VIEW';
-			console.log(JSON.stringify(record));
-			var params = {
-				DeliveryStreamName: config.aws_kinesis_end_point,
-				Record: {
-					Data: JSON.stringify(record) + "\n"
-				}
-			};
-			firehose.putRecord(params, function (err, data) {
-				console.log('save done.');
-				if (err) console.log(err, err.stack); // an error occurred
-				else console.log(data); // successful response
+		if (req.query.hostname)
+			record.hostname = req.query.hostname.toLowerCase();
+		if (req.query.uri)
+			record.uri = req.query.uri;
+		var ip = req.headers['x-forwarded-for'] || 
+			req.connection.remoteAddress || 
+			req.socket.remoteAddress ||
+			req.connection.socket.remoteAddress;
+		record.ip = ip ;
+		geoip2.lookupSimple("67.183.57.64", function(error, result) {
+			record.geo = {};
+			if (error) {
+				saveData();
+			} else if (result) {
+				record.geo = result ;
+				saveData();
+			}
+		});
+		var saveData = function () {
+			var userAgent = req.headers['user-agent'];
+			record.userAgent = userAgent ;
+			console.log(JSON.stringify(req.headers));
+			if (Object.keys(record).length !== 0 && (typeof record.gid !== 'undefined' || typeof record.m_id !== 'undefined')) {
+				record.date = (new Date()).getTime();
+				if (req.query.act)
+					record.act = req.query.act.toUpperCase();
+				else
+					record.act = 'VIEW';
+				console.log(JSON.stringify(record));
+				var params = {
+					DeliveryStreamName: config.aws_kinesis_end_point,
+					Record: {
+						Data: JSON.stringify(record) + "\n"
+					}
+				};
+				firehose.putRecord(params, function (err, data) {
+					console.log('save done.');
+					if (err) console.log(err, err.stack); // an error occurred
+					else console.log(data); // successful response
+					var buf = new Buffer(35);
+					res.writeHead(200, {
+						'Content-Type': 'image/png',
+						'Content-Length': buf.length
+					});
+					res.end(buf);
+				});
+			} else {
 				var buf = new Buffer(35);
 				res.writeHead(200, {
 					'Content-Type': 'image/png',
 					'Content-Length': buf.length
 				});
 				res.end(buf);
-			});
-		} else {
-			var buf = new Buffer(35);
-			res.writeHead(200, {
-				'Content-Type': 'image/png',
-				'Content-Length': buf.length
-			});
-			res.end(buf);
+			}
 		}
 	} else {
 		var buf = new Buffer(35);
