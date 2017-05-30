@@ -1,4 +1,4 @@
-# Collect Post Data to S3 by AWS Kinesis
+# Collect Data to S3 by AWS Kinesis
 You could post some user's data to lambda and lambda saves that by kinesis firehose,
 and it will be deliveried to S3. You also save that to Redshift.
 
