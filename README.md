@@ -17,12 +17,31 @@ You have to create a Kinesis Firehose and set the delivery name in the enviramen
 4. node app.js
 Run it on terminal , then you could see : Example app listening at http://localhost:55090/cl
 
-5. curl -d "prod_no=AAAA&gid=123" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:55305/cl
-You could see the result:  {"code":"000"} and there are some information about kinesis on the console, 
-for example : 
-{ RecordId: 'tbHeep6BMepjJcKX6WDXTg1OJUUGHhj.........' }
-
+5. Tracker : curl http://localhost:55305/cl?prod_no=AAAA&gid=123
 app.js for run on client
 lambda.js for run on AWS's lamdba
+
+6.We collect these data. 
+ex :
+prod_no : String (UpperCase)
+m_id : String (UpperCase)
+ord_no : String (UpperCase)
+gid : String (UpperCase)
+desc : String
+title : String
+beg_dt : String
+url : String
+data : Json
+channel: String (UpperCase)
+hostname : String (LowerCase)
+uri: String
+ip : String
+userAgent : String
+date : timestamp
+act : String ( Default : View)
+city : String
+country : String
+continet : String
+location : Json
 
 

@@ -7,6 +7,7 @@
     "aws-sdk": "^2.49.0",
     "aws-serverless-express": "^2.2.0",
     "body-parser": "^1.17.1",
+    "emptygif": "^0.1.1",
     "express": "^4.15.2",
     "maxmind": "^2.2.0"
   },
