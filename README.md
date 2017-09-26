@@ -21,27 +21,28 @@ Run it on terminal , then you could see : Example app listening at http://localh
 app.js for run on client
 lambda.js for run on AWS's lamdba
 
-6.We collect these data. 
-ex :
-prod_no : String (UpperCase)
-m_id : String (UpperCase)
-ord_no : String (UpperCase)
-gid : String (UpperCase)
-desc : String
-title : String
-beg_dt : String
-url : String
-data : Json
-channel: String (UpperCase)
-hostname : String (LowerCase)
-uri: String
-ip : String
-userAgent : String
-date : timestamp
-act : String ( Default : View)
-city : String
-country : String
-continet : String
-location : Json
+6. It collects these data. 
+<pre>
+  prod_no : String (UpperCase)
+  m_id : String (UpperCase)
+  ord_no : String (UpperCase)
+  gid : String (UpperCase)
+  desc : String
+  title : String
+  beg_dt : String
+  url : String
+  data : Json
+  channel: String (UpperCase)
+  hostname : String (LowerCase)
+  uri: String
+  ip : String
+  userAgent : String
+  date : timestamp
+  act : String ( Default : View)
+  city : String
+  country : String
+  continet : String
+  location : Json
+</pre>
 
 
