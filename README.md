@@ -26,8 +26,10 @@ lambda.js for run on AWS's lamdba
   prod_no : String (UpperCase)
   m_id : String (UpperCase)
   ord_no : String (UpperCase)
+  amt: String 
   gid : String (UpperCase)
   desc : String
+  recid : String (UpperCase)
   title : String
   beg_dt : String
   url : String
@@ -44,5 +46,3 @@ lambda.js for run on AWS's lamdba
   continet : String
   location : Json
 </pre>
-
-

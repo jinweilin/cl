@@ -9,7 +9,9 @@
     "body-parser": "^1.17.1",
     "emptygif": "^0.1.1",
     "express": "^4.15.2",
-    "maxmind": "^2.2.0"
+    "maxmind": "^2.2.0",
+    "moment": "^2.20.1",
+    "moment-timezone": "^0.5.14"
   },
   "devDependencies": {},
   "scripts": {

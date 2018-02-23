@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const maxmind = require('maxmind');
 const emptygif = require('emptygif');
+const moment = require('moment-timezone');
 var AWS = require("aws-sdk");
 AWS.config.update({
   region: 'us-east-1'
@@ -41,6 +42,8 @@ app.get('/cl', function (req, res) {
       record.amt = req.query.amt;
     if (req.query.gid) //GA ID
       record.gid = req.query.gid.toUpperCase();
+    if (req.query.recid) //GA ID
+      record.recid = req.query.recid.toUpperCase();
     if (req.query.desc) //網頁desc
       record.desc = req.query.desc;
     if (req.query.title) //網頁Title
@@ -63,7 +66,7 @@ app.get('/cl', function (req, res) {
       req.connection.socket.remoteAddress; // IP
     record.ip = ip;
     record.userAgent = req.headers['user-agent'] || ''; //使用瀏覽器版本
-    record.date = (new Date()).getTime(); //記錄時間
+    record.date = moment().tz("Asia/Taipei").format("YYYY-MM-DD HH:mm:ss"); //記錄時間
     if (req.query.act) //網頁活動,預設 VIEW
       record.act = req.query.act.toUpperCase();
     else
