@@ -137,11 +137,11 @@ app.get('/cl', function (req, res) {
         console.log('save done.');
         if (err) console.log(err, err.stack); // an error occurred
         else console.log(data); // successful response
-        emptygif.sendEmptyGif(req, res, {
-          'Content-Type': 'image/gif',
-          'Content-Length': emptygif.emptyGifBufferLength,
-          'Cache-Control': 'public, max-age=0' // or specify expiry to make sure it will call everytime
-        });
+        // emptygif.sendEmptyGif(req, res, {
+        //   'Content-Type': 'image/gif',
+        //   'Content-Length': emptygif.emptyGifBufferLength,
+        //   'Cache-Control': 'public, max-age=0' // or specify expiry to make sure it will call everytime
+        // });
       });
     } else {
       emptygif.sendEmptyGif(req, res, {
