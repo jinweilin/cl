@@ -121,11 +121,11 @@ app.get('/cl', function (req, res) {
       }
     }
     if (Object.keys(record).length !== 0) {
-      emptygif.sendEmptyGif(req, res, {
-        'Content-Type': 'image/gif',
-        'Content-Length': emptygif.emptyGifBufferLength,
-        'Cache-Control': 'public, max-age=0' // or specify expiry to make sure it will call everytime
-      });
+      // emptygif.sendEmptyGif(req, res, {
+      //   'Content-Type': 'image/gif',
+      //   'Content-Length': emptygif.emptyGifBufferLength,
+      //   'Cache-Control': 'public, max-age=0' // or specify expiry to make sure it will call everytime
+      // });
       console.log(JSON.stringify(record));
       var params = {
         DeliveryStreamName: config.aws_kinesis_end_point,
